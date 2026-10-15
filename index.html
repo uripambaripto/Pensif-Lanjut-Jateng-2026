@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendidikan Inklusif Tingkat Lanjut</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"Fira Code"', 'monospace'],
+                    },
+                    colors: {
+                        cyber: {
+                            purple: '#a855f7',
+                            blue: '#3b82f6',
+                            cyan: '#06b6d4',
+                            emerald: '#10b981',
+                            amber: '#f59e0b',
+                            rose: '#f43f5e'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #070a12;
+            color: #f3f4f6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        /* Ambient Dynamic Background */
+        .bg-gradient-cyber {
+            background: radial-gradient(circle at 15% 15%, rgba(124, 58, 237, 0.18), transparent 45%),
+                        radial-gradient(circle at 85% 20%, rgba(6, 182, 212, 0.18), transparent 40%),
+                        radial-gradient(circle at 50% 80%, rgba(16, 185, 129, 0.15), transparent 50%),
+                        linear-gradient(180deg, #070a12 0%, #0d1322 100%);
+            background-attachment: fixed;
+        }
+
+        /* Glassmorphism Styling */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .glass-panel {
+            background: rgba(20, 29, 47, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        /* Unique Glow Buttons per Topic */
+        .topic-btn {
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+        }
+
+        .topic-btn::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: inherit;
+            padding: 2px;
+            background: var(--glow-gradient);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        .topic-btn:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 20px 30px -10px var(--shadow-color);
+        }
+
+        .topic-btn:hover::before {
+            opacity: 1;
+        }
+
+        .topic-btn:active {
+            transform: translateY(-2px) scale(0.99);
+        }
+
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Tab Active Indicator Styling */
+        .tab-btn.active {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-gradient-cyber flex flex-col justify-between relative text-gray-100 min-h-screen">
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 w-full glass-panel border-b border-white/10 px-4 sm:px-8 py-4 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            
+            <!-- Brand Logo -->
+            <div class="flex items-center space-x-3 w-full md:w-auto justify-between md:justify-start">
+                <div class="flex items-center space-x-3">
+                    <div class="p-3 bg-gradient-to-tr from-purple-600 to-cyan-500 rounded-2xl shadow-lg shadow-purple-500/20 text-white">
+                        <i class="fa-solid fa-graduation-cap text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-extrabold text-lg sm:text-xl tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-cyan-300 to-emerald-400">
+                            Pendidikan Inklusif Lanjut
+                        </h1>
+                        <p class="text-xs text-gray-400">[2026] Pendidikan Inklusif Lanjut_Jawa Tengah</p>
+                    </div>
+                </div>
+
+                <!-- Audio Toggle (Mobile Header Right) -->
+                <button onclick="toggleAudio()" class="md:hidden glass-card p-2.5 rounded-xl text-xs flex items-center space-x-2">
+                    <i id="audioIconMobile" class="fa-solid fa-volume-high text-cyan-400"></i>
+                </button>
+            </div>
+
+            <!-- Progress Tracker & Sound Toggle -->
+            <div class="flex items-center space-x-3 w-full md:w-auto justify-end">
+                <!-- Progress Bar -->
+                <div class="glass-card px-4 py-2 rounded-2xl flex items-center space-x-3 border border-white/10 w-full md:w-auto">
+                    <i class="fa-solid fa-list-check text-emerald-400 text-sm"></i>
+                    <div class="flex-1 md:w-36">
+                        <div class="flex justify-between text-xs mb-1 font-semibold">
+                            <span class="text-gray-300">Tugas Selesai</span>
+                            <span id="progressText" class="text-cyan-400">0/9</span>
+                        </div>
+                        <div class="w-full bg-gray-800 rounded-full h-1.5 overflow-hidden">
+                            <div id="progressBar" class="bg-gradient-to-r from-cyan-400 to-emerald-400 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Desktop Sound Toggle -->
+                <button id="audioToggleBtn" onclick="toggleAudio()" class="hidden md:flex glass-card px-4 py-2.5 rounded-2xl text-xs font-semibold items-center space-x-2 hover:bg-white/10 transition-all border border-white/10">
+                    <i id="audioIcon" class="fa-solid fa-volume-high text-cyan-400"></i>
+                    <span id="audioText">Sound: ON</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-8 py-8 w-full flex-1">
+        
+        <!-- Search & Filter Bar -->
+        <div class="flex flex-col md:flex-row gap-4 mb-8 justify-between items-center">
+            
+            <!-- Category Tabs -->
+            <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                <button onclick="filterCategory('all')" id="tab-all" class="tab-btn active px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold glass-card border border-white/10 transition-all">
+                    <i class="fa-solid fa-shapes mr-1.5 text-purple-400"></i> Semua Topik
+                </button>
+                <button onclick="filterCategory('tema1')" id="tab-tema1" class="tab-btn px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold glass-card border border-white/10 transition-all text-gray-300">
+                    <i class="fa-solid fa-compass mr-1.5 text-cyan-400"></i> Tema 1 Perencanaan Program Pendidikan Inklusif
+                </button>
+                <button onclick="filterCategory('tema2')" id="tab-tema2" class="tab-btn px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold glass-card border border-white/10 transition-all text-gray-300">
+                    <i class="fa-solid fa-magnifying-glass-chart mr-1.5 text-emerald-400"></i> Tema 2 Identifikasi dan Asesmen
+                </button>
+                <button onclick="filterCategory('tema3')" id="tab-tema3" class="tab-btn px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold glass-card border border-white/10 transition-all text-gray-300">
+                    <i class="fa-solid fa-lightbulb mr-1.5 text-amber-400"></i> Tema 3 Penerapan Strategi Pengajaran yang Efektif
+                </button>
+                <a href="https://drive.google.com/drive/folders/1WnQto_rTAooiQwRlYD4SwkKrToAQ7kFo?usp=drive_link" target="_blank" rel="noopener noreferrer" class="tab-btn px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold glass-card border border-white/10 transition-all text-gray-300 hover:text-white flex items-center">
+                    <i class="fa-solid fa-folder-open mr-1.5 text-rose-400"></i> Buka Semua Link
+                </a>
+            </div>
+
+            <!-- Search Input -->
+            <div class="relative w-full md:w-72">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Cari topik atau kata kunci..." class="w-full bg-slate-900/80 border border-white/10 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-gray-200 placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 transition-all">
+            </div>
+        </div>
+
+        <!-- Topics Grid -->
+        <div id="topicsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Dynamic Topics Cards Will Be Generated Here -->
+        </div>
+
+        <!-- No Results Fallback -->
+        <div id="noResults" class="hidden text-center py-16">
+            <i class="fa-solid fa-circle-exclamation text-4xl text-gray-600 mb-3"></i>
+            <p class="text-gray-400 text-sm">Tidak ada topik yang sesuai dengan pencarian Anda.</p>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full border-t border-white/5 bg-black/30 backdrop-blur-lg py-6 px-4 text-center text-xs text-gray-500">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <p>© 2026 Urip Ambaripto | SMP Diponegoro Sampang</p>
+            <p class="text-gray-400"><i class="fa-brands fa-whatsapp text-emerald-400 mr-1 text-sm"></i> 08817626520</p>
+        </div>
+    </footer>
+
+    <!-- Topic Detail Modal -->
+    <div id="topicModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+        <div id="modalContainer" class="glass-panel w-full max-w-2xl rounded-3xl p-6 sm:p-8 relative transform scale-95 transition-all duration-300 border border-white/20 shadow-2xl max-h-[90vh] flex flex-col">
+            
+            <!-- Close Button -->
+            <button onclick="closeTopicModal()" class="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/15 transition-all">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- Modal Header -->
+            <div class="mb-6">
+                <div class="flex items-center space-x-2 mb-2">
+                    <span id="mThemeBadge" class="px-3 py-1 rounded-full text-[10px] sm:text-xs font-extrabold uppercase tracking-wider bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                        Tema 1 • Topik 1
+                    </span>
+                    <span id="mStatusBadge" class="px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold bg-gray-800 text-gray-400 border border-white/5 flex items-center space-x-1">
+                        <i class="fa-solid fa-clock"></i>
+                        <span>Belum Selesai</span>
+                    </span>
+                </div>
+                <h2 id="mTitle" class="text-xl sm:text-2xl font-black text-white leading-tight">
+                    Judul Topik
+                </h2>
+            </div>
+
+            <!-- Scrollable Content Body -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-6">
+                
+                <!-- Ringkasan Materi Section -->
+                <div class="bg-slate-900/60 rounded-2xl p-5 border border-white/5">
+                    <h3 class="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-2 flex items-center space-x-2">
+                        <i class="fa-solid fa-book-open"></i>
+                        <span>Ringkasan Materi Utama</span>
+                    </h3>
+                    <p id="mSummary" class="text-sm text-gray-200 leading-relaxed font-normal">
+                        Ringkasan materi...
+                    </p>
+                </div>
+
+                <!-- Key Points Bullet List -->
+                <div>
+                    <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-3 flex items-center space-x-2">
+                        <i class="fa-solid fa-bullseye"></i>
+                        <span>Poin-Poin Kunci Pembelajaran</span>
+                    </h3>
+                    <ul id="mKeyPoints" class="space-y-2 text-xs sm:text-sm text-gray-300">
+                        <!-- Key points injected here -->
+                    </ul>
+                </div>
+
+                <!-- Case Study Box -->
+                <div class="bg-purple-950/30 border border-purple-500/20 rounded-2xl p-4">
+                    <h3 class="text-xs font-bold text-purple-400 uppercase tracking-wider mb-1 flex items-center space-x-2">
+                        <i class="fa-solid fa-user-graduate"></i>
+                        <span>Studi Kasus & Contoh Terapan</span>
+                    </h3>
+                    <p id="mCaseStudy" class="text-xs text-purple-200/90 leading-relaxed italic">
+                        Studi kasus...
+                    </p>
+                </div>
+
+                <!-- Task / Assignment Note Box (Clickable Link) -->
+                <a id="mTaskBox" href="#" target="_blank" rel="noopener noreferrer" class="block bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 hover:border-amber-500/40 rounded-2xl p-4 transition-all group cursor-pointer shadow-lg hover:shadow-amber-500/10">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center space-x-2">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <span>Catatan Tugas & Refleksi</span>
+                        </h3>
+                        <span class="text-[10px] text-amber-300 font-bold flex items-center space-x-1.5 bg-amber-500/20 group-hover:bg-amber-500/30 px-2.5 py-1 rounded-full border border-amber-500/30 transition-all">
+                            <span>Buka Link Tugas</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                        </span>
+                    </div>
+                    <p id="mTaskNote" class="text-xs text-gray-300 leading-relaxed group-hover:text-white transition-colors">
+                        Catatan tugas...
+                    </p>
+                </a>
+
+            </div>
+
+            <!-- Modal Footer Action -->
+            <div class="pt-6 border-t border-white/10 mt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <label class="flex items-center space-x-3 cursor-pointer group">
+                    <input type="checkbox" id="mCheckbox" onchange="toggleTaskStatusFromModal()" class="w-5 h-5 rounded border-gray-600 bg-gray-800 text-cyan-500 focus:ring-cyan-500/30">
+                    <span class="text-xs sm:text-sm font-semibold text-gray-300 group-hover:text-white transition-colors">
+                        Tandai Tugas Topik Ini Selesai
+                    </span>
+                </label>
+
+                <button onclick="closeTopicModal()" class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-purple-500/20 transition-all">
+                    Tutup Detail
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        /* ==========================================================================
+           1. DATA TOPIC CONTENT (Berdasarkan Modul Pendidikan Inklusif Lanjut)
+           ========================================================================== */
+        const topicsData = [
+            // TEMA 1: PERENCANAAN
+            {
+                id: 't1_1',
+                category: 'tema1',
+                themeTag: 'Tema 1 • Topik 1',
+                themeName: 'Perencanaan Program Pendidikan Inklusif',
+                title: 'Kerangka Kerja Desain Universal untuk Pembelajaran (DUP)',
+                shortDesc: 'Fleksibilitas desain kurikulum sejak awal melalui multi-keterlibatan, representasi materi, serta ekspresi siswa.',
+                icon: 'fa-cubes-stacked',
+                gradient: 'linear-gradient(135deg, #a855f7, #3b82f6)',
+                glow: 'rgba(168, 85, 247, 0.4)',
+                soundFreq: 523.25, // C5
+                summary: 'Desain Universal untuk Pembelajaran (DUP/UDL) adalah pendekatan aksesibel yang merancang kurikulum fleksibel sejak awal, bukan penyesuaian tambal sulam di akhir. DUP berlandaskan tiga pilar neurosains: Jaringan Afektif (Mengapa belajar - Keterlibatan), Jaringan Pengenalan (Apa yang dipelajari - Representasi), dan Jaringan Strategis (Bagaimana belajar - Akses & Ekspresi) untuk memberdayakan seluruh murid menjadi pembelajar mandiri.',
+                keyPoints: [
+                    'Multi-Keterlibatan (Engagement): Memotivasi murid melalui pilihan minat, otonomi, opsi kejelasan tujuan, dan regulasi emosi.',
+                    'Multi-Representasi (Representation): Menyajikan materi dalam bentuk teks, audio, visual, taktil, dan grafik serta dukungan simbol/bahasa.',
+                    'Multi-Aksi & Ekspresi (Action & Expression): Mengizinkan murid menunjukkan pemahaman melalui tulisan, presentasi lisan, karya seni, proyek digital, atau demonstrasi praktis.'
+                ],
+                caseStudy: 'Uji Coba DUP di Kelas V: Guru Rina menyajikan materi Ekosistem melalui video berteks, diorama 3D, dan buku bacaan taktil. Murid bebas memilih membuat peta konsep, podcast audio, atau miniatur ekosistem sebagai bentuk evaluasi.',
+                taskNote: '1.1.4. Aktivitas 4: Waktu untuk Belajar Mandiri, 1.1.5. Aktivitas 5: Giliran Anda, 1.1.6. Aktivitas 6: Terhubung dengan Rekan, 1.1.7. Aktivitas 7: Menulis Jurnal Reflektif.',
+                taskUrl: 'https://drive.google.com/drive/folders/1PH-pUl2OjEXPy_g1vUjcJCUe8zuJV9B-?usp=drive_link'
+            },
+            {
+                id: 't1_2',
+                category: 'tema1',
+                themeTag: 'Tema 1 • Topik 2',
+                themeName: 'Perencanaan Program Pendidikan Inklusif',
+                title: 'Perencanaan dan Pemrograman Kurikulum',
+                shortDesc: 'Penyesuaian terstruktur antara Kurikulum Nasional, Akomodasi Aksesibilitas, Modifikasi Target, dan PPI.',
+                icon: 'fa-sliders',
+                gradient: 'linear-gradient(135deg, #06b6d4, #3b82f6)',
+                glow: 'rgba(6, 182, 212, 0.4)',
+                soundFreq: 587.33, // D5
+                summary: 'Perencanaan kurikulum inklusif membedakan secara tegas antara Akomodasi (penyesuaian cara/akses tanpa mengubah capaian pembelajaran) dan Modifikasi (penyesuaian tingkat kesulitan target belajar bagi murid dengan hambatan kognitif signifikan). Seluruh penyesuaian dituangkan dalam Program Pembelajaran Individual (PPI) yang berorientasi SMART.',
+                keyPoints: [
+                    'Akomodasi Kurikulum: Penyesuaian waktu, format media (screen reader/braille), lokasi duduk, atau cara menjawab tanpa menurunkan standar akademik.',
+                    'Modifikasi Kurikulum: Penyesuaian kedalaman materi, pengurangan jumlah indikator, atau penyederhanaan capaian kompetensi.',
+                    'Penyusunan PPI (IEP): Dokumen kolaboratif oleh Guru Kelas, GPK, Psikolog, dan Orang Tua berbasis target SMART (Specific, Measurable, Achievable, Relevant, Time-bound).'
+                ],
+                caseStudy: 'Studi Kasus Aryo (Hambatan Pendengaran): Diberikan akomodasi berupa teks terjemahan visual, dudukan paling depan, dan juru bahasa isyarat tanpa menurunkan target capaian akademik kurikulum.',
+                taskNote: '1.2.5. Aktivitas 5: Giliran Anda, 1.2.6. Aktivitas 6: Terhubung dengan Rekan, 1.2.7. Aktivitas 7 : Menulis Jurnal Reflektif, 1.2.8. Asesmen 2: Tanggapan Video atau Teks Pendek.',
+                taskUrl: 'https://drive.google.com/drive/folders/1XUdo2Cznl8VSLb_ylW1JP6w65iCsuS1s?usp=drive_link'
+            },
+            {
+                id: 't1_3',
+                category: 'tema1',
+                themeTag: 'Tema 1 • Topik 3',
+                themeName: 'Perencanaan Program Pendidikan Inklusif',
+                title: 'Mengembangkan Pembelajaran dan Pengalaman Belajar yang Inklusif',
+                shortDesc: 'Pengalaman belajar ramah melalui diferensiasi,iklim psikososial aman, dan kolaborasi Tutor Sebaya.',
+                icon: 'fa-people-group',
+                gradient: 'linear-gradient(135deg, #3b82f6, #10b981)',
+                glow: 'rgba(59, 130, 246, 0.4)',
+                soundFreq: 659.25, // E5
+                summary: 'Mengembangkan pembelajaran inklusif berorientasi pada gabungan Pembelajaran Berdiferensiasi (Konten, Proses, Produk) dengan penataan iklim sosial yang suportif. Melalui strategi kolaboratif seperti Peer Tutoring (Tutor Sebaya), seluruh murid berinteraksi tanpa stigma dan saling melengkapi.',
+                keyPoints: [
+                    'Diferensiasi Konten, Proses, & Produk: Penyesuaian variasi materi, dinamika kelompok, dan pilihan tugas.',
+                    'Pembelajaran Teman Sebaya (Peer-Assisted Learning): Melatih murid reguler menjadi mitra belajar yang inklusif.',
+                    'Aksesibilitas Fisik & Emosional: Penataan ruang bebas hambatan mobilitas dan budaya kelas bebas perundungan (Zero Bullying).'
+                ],
+                caseStudy: 'Studi Kasus Joga (Autisme): Penggunaan Visual Schedule (jadwal bergambar) di meja belajar dan Cooling-down Corner (sudut tenang) membantu Joga meregulasi emosi saat transisi aktivitas.',
+                taskNote: '1.3.5. Aktivitas 5: Giliran Anda, 1.3.6. Aktivitas 6: Terhubung dengan Rekan, 1.3.7. Aktivitas 7: Menulis Jurnal Reflektif, 1.3.8. Asesmen 3: Rencana Pembelajaran Menggunakan DUP dan Kritik.',
+                taskUrl: 'https://drive.google.com/drive/folders/1AHdsE_cfOun6aR88vzdsDLWzNrm9epef?usp=drive_link'
+            },
+
+            // TEMA 2: IDENTIFIKASI DAN ASESMEN
+            {
+                id: 't2_1',
+                category: 'tema2',
+                themeTag: 'Tema 2 • Topik 1',
+                themeName: 'Identifikasi dan Asesmen',
+                title: 'Mengidentifikasi Kebutuhan Pembelajaran Fungsional Murid',
+                shortDesc: 'Deteksi dini potensi dan hambatan fungsional murid berbasis kekuatan tanpa pelabelan negatif.',
+                icon: 'fa-microscope',
+                gradient: 'linear-gradient(135deg, #10b981, #06b6d4)',
+                glow: 'rgba(16, 185, 129, 0.4)',
+                soundFreq: 698.46, // F5
+                summary: 'Identifikasi fungsional merupakan deteksi dini berkelanjutan untuk mengenali potensi, gaya belajar, hambatan sensorik/motorik/kognitif, serta tingkat kemandirian murid. Berorientasi pada Strength-Based Approach (apa yang BISA dilakukan) alih-alih pelabelan medis.',
+                keyPoints: [
+                    'Instrumen Deteksi & Screening: Observasi perilaku fungsional, wawancara orang tua, dan analisis sampel karya murid.',
+                    'Pemetaan Hambatan Fungsional: Mengukur aspek kognitif, bahasa/komunikasi, motorik, serta sosio-emosional & adaptif.',
+                    'Profil Belajar Murid (PBM): Dokumen ringkas pemetaan Strengths (Kekuatan), Needs (Kebutuhan), dan Support Systems murid.'
+                ],
+                caseStudy: 'Studi Kasus Elang (Hambatan Pemusatan Perhatian/ADHD): Identifikasi menunjukkan Elang memiliki kecerdasan visual tinggi namun kesulitan konsentrasi >10 menit. Intervensi mencakup instruksi bertahap dan istirahat gerak (brain break).',
+                taskNote: '2.1.5. Aktivitas 5: Giliran Anda, 2.1.6. Aktivitas 6: Terhubung dengan Rekan, 2.1.7. Aktivitas 7: Menulis Jurnal Reflektif.',
+                taskUrl: 'https://drive.google.com/drive/folders/14VpualuWW7e2dZuef_uhq09tXbe1EVWZ?usp=drive_link'
+            },
+            {
+                id: 't2_2',
+                category: 'tema2',
+                themeTag: 'Tema 2 • Topik 2',
+                themeName: 'Identifikasi dan Asesmen',
+                title: 'Asesmen Dari, Untuk, dan Sebagai Pembelajaran',
+                shortDesc: 'Penerapan Assessment OF, FOR, dan AS Learning yang adaptif, formatif, dan berkeadilan.',
+                icon: 'fa-chart-pie',
+                gradient: 'linear-gradient(135deg, #10b981, #f59e0b)',
+                glow: 'rgba(245, 158, 11, 0.4)',
+                soundFreq: 783.99, // G5
+                summary: 'Asesmen inklusif memprioritaskan Keadilan (Equity) dibanding Kesetaraan (Equality). Asesmen tidak sekadar menilai hasil akhir (Assessment OF Learning), tetapi diutamakan untuk umpan balik perbaikan (Assessment FOR Learning) dan metakognisi mandiri siswa (Assessment AS Learning).',
+                keyPoints: [
+                    'Assessment FOR Learning: Asesmen diagnostik awal, kuis interaktif tanpa nilai rapot, dan umpan balik formatif harian.',
+                    'Assessment AS Learning: Penilaian diri mandiri (Self-assessment) bergambar dan umpan balik antar teman (Peer-feedback).',
+                    'Assessment OF Learning Adaptif: Penilaian sumatif dengan moda alternatif (uji lisan, unjuk kerja, portofolio digital).'
+                ],
+                caseStudy: 'Penerapan Rubrik Adaptif: Menggunakan rubrik kriteria bertingkat yang mengukur perkembangan pertumbuhan murid (Growth-mindset) alih-alih angka absolut tunggal.',
+                taskNote: '2.2.4. Aktivitas 4: Waktu untuk Belajar Mandiri, 2.2.5. Aktivitas 5. Giliran Anda, 2.2.6. Aktivitas 6. Terhubung dengan Orang Lain, 2.2.8. Asesmen 2 : Tanggapan berupa Video atau Teks Jawaban Singkat',
+                taskUrl: 'https://drive.google.com/drive/folders/1Yn3UsB4WcVRrJmGl4vQnsDP7oAxjnLRZ?usp=drive_link'
+            },
+            {
+                id: 't2_3',
+                category: 'tema2',
+                themeTag: 'Tema 2 • Topik 3',
+                themeName: 'Identifikasi dan Asesmen',
+                title: 'Hubungan antara asesmen dengan perencanaan dan pemrograman',
+                shortDesc: 'Siklus berkesinambungan antara data hasil asesmen sebagai dasar penetapan sasaran PPI & modul ajar.',
+                icon: 'fa-diagram-project',
+                gradient: 'linear-gradient(135deg, #f59e0b, #ec4899)',
+                glow: 'rgba(245, 158, 11, 0.4)',
+                soundFreq: 880.00, // A5
+                summary: 'Asesmen dan Perencanaan Pembelajaran membentuk lingkaran tertutup (Assessment-Driven Instruction). Data asesmen awal menjadi Baseline Data untuk menetapkan sasaran PPI, merancang scaffolding instruksional, serta melakukan pemantauan progres berkala (Progress Monitoring).',
+                keyPoints: [
+                    'Siklus Pembelajaran & Asesmen: Diagnostik → Perencanaan PPI/Modul Ajar → Pelaksanaan Strategi → Progress Monitoring → Evaluasi.',
+                    'Garis Dasar (Baseline Data): Titik awal performa terukur murid sebelum intervensi pengajaran diberikan.',
+                    'Pengambilan Keputusan Berbasis Data: Penyesuaian taktis strategi mengajar jika progres murid stagnan dalam kurun waktu tertentu.'
+                ],
+                caseStudy: 'Monitoring Progres Membaca: Data asesmen mingguan digunakan untuk menaikkan tingkat kompleksitas teks ber-scaffolding bagi murid berhambatan disleksia.',
+                taskNote: '2.3.4. Aktivitas 4: Waktu untuk Belajar Mandiri, 2.3.5. Aktivitas 5: Giliran Anda, 2.3.6. Aktivitas 6: Terhubung dengan Rekan, 2.3.7. Aktivitas 7: Menulis Jurnal Reflektif, 2.3.8. Asesmen 3: Mengembangkan, Menerapkan, dan Merefleksikan Strategi Asesmen.',
+                taskUrl: 'https://drive.google.com/drive/folders/100BGUIC9T0oiuCfcWlBdaDevwbPiH2-L?usp=drive_link'
+            },
+
+            // TEMA 3: STRATEGI PENGAJARAN EFEKTIF
+            {
+                id: 't3_1',
+                category: 'tema3',
+                themeTag: 'Tema 3 • Topik 1',
+                themeName: 'Penerapan Strategi Pengajaran Efektif',
+                title: 'Strategi pengajaran evidence-informed',
+                shortDesc: 'Penerapan metode teruji empiris mencakup Instruksi Eksplisit, Scaffolding, PALS, dan Tugas Berjenjang.',
+                icon: 'fa-award',
+                gradient: 'linear-gradient(135deg, #ec4899, #a855f7)',
+                glow: 'rgba(236, 72, 153, 0.4)',
+                soundFreq: 987.77, // B5
+                summary: 'Strategi Evidence-Informed menggabungkan riset empiris pedagogis terbaik dengan pengalaman kontekstual guru. Strategi berdaya guna tinggi mencakup Instruksi Eksplisit (Explicit Instruction), Penyanggaan (Scaffolding), Tugas Berjenjang (Tiered Tasks), dan PALS.',
+                keyPoints: [
+                    'Instruksi Eksplisit (I Do, We Do, You Do): Pemodelan langsung dari guru, latihan terbimbing bersama, hingga latihan mandiri.',
+                    'Scaffolding Bertahap: Bantuan struktural (petunjuk visual/taktil) yang dikurangi perlahan seiring meningkatnya kemandirian murid.',
+                    'Tiered Instruction (Tugas Berjenjang): Menyediakan tugas dengan 3 tingkat kompleksitas berbeda menuju sasaran konsep inti yang sama.'
+                ],
+                caseStudy: 'Penerapan PALS pada Pelajaran Bahasa: Murid reguler berpasangan dengan murid berkebutuhan khusus untuk membaca bergiliran (Partner Reading) menggunakan kartu petunjuk pemahaman.',
+                taskNote: '3.1.5. Aktivitas 5: Giliran Anda, 3.1.6. Aktivitas 6: Terhubung dengan Rekan, 3.1.7. Aktivitas 7: Menulis Jurnal Reflektif.',
+                taskUrl: 'https://drive.google.com/drive/folders/1aZsW6FT5CXFgJdxP85K1cw_rLgPS-gym?usp=drive_link'
+            },
+            {
+                id: 't3_2',
+                category: 'tema3',
+                themeTag: 'Tema 3 • Topik 2',
+                themeName: 'Penerapan Strategi Pengajaran Efektif',
+                title: 'Proses Pengembangan, Implementasi, dan Refleksi Strategi Pengajaran',
+                shortDesc: 'Siklus uji coba strategi di kelas inklusif, observasi respons siswa, dan pencatatan refleksi instruksional.',
+                icon: 'fa-arrows-spin',
+                gradient: 'linear-gradient(135deg, #a855f7, #f43f5e)',
+                glow: 'rgba(168, 85, 247, 0.4)',
+                soundFreq: 1046.50, // C6
+                summary: 'Implementasi strategi inklusif memerlukan pemantauan dinamika kelas secara real-time. Guru merancang strategi, menguji cobanya, memantau kecemasan serta keterlibatan murid (seperti pada Farida, Juwita, dan Eni), lalu melakukan refleksi aksi untuk perbaikan.',
+                keyPoints: [
+                    'Uji Coba Strategi Terencana: Menyiapkan media adaptif, pengelompokan heterogen, dan instruksi langkah-demi-langkah.',
+                    'Observasi Keterlibatan & Respons: Mengamati tingkat partisipasi, fokus, serta hambatan sosial murid selama pembelajaran.',
+                    'Jurnal Refleksi Pembelajaran: Catatan harian mengenai hal yang berhasil, tantangan tak terduga, dan rencana penyesuaian esok hari.'
+                ],
+                caseStudy: 'Studi Kasus Farida, Juwita, & Eni: Penggunaan Kartu Petunjuk Visual (Visual Prompts) berhasil menurunkan tingkat kecemasan Farida saat transisi materi Matematika.',
+                taskNote: '3.2.3. Aktivitas 3: Peran Strategi Pengajaran Evidence-Informed dalam Siklus Belajar Mengajar, 3.2.4. Aktivitas 4: Waktu untuk Belajar Mandiri, 3.2.5. Aktivitas 5: Giliran Anda, 3.2.6. Aktivitas 6: Terhubung dengan Rekan, 3.2.7. Aktivitas 7: Menulis Jurnal Reflektif, 3.2.8. Asesmen 2: Tanggapan berupa Video atau Teks Jawaban Pendek.',
+                taskUrl: 'https://drive.google.com/drive/folders/1JUT7NEgCnl8HdlAEb-036FzzZq-fcNOe?usp=drive_link'
+            },
+            {
+                id: 't3_3',
+                category: 'tema3',
+                themeTag: 'Tema 3 • Topik 3',
+                themeName: 'Penerapan Strategi Pengajaran Efektif',
+                title: 'Mengkritisi dan Merefleksikan Strategi Pengajaran',
+                shortDesc: 'Evaluasi kritis untuk meruntuhkan Hambatan Belajar (Barriers to Learning) dan merumuskan RTL.',
+                icon: 'fa-brain',
+                gradient: 'linear-gradient(135deg, #f43f5e, #06b6d4)',
+                glow: 'rgba(244, 63, 94, 0.4)',
+                soundFreq: 1174.66, // D6
+                summary: 'Refleksi kritis mendorong pendidik membongkar asumsi implisit dan mengidentifikasi Hambatan Sistemik dalam Pembelajaran (Barriers to Learning). Guru bersama Komunitas Praktisi dan GPK merumuskan Rencana Tindak Lanjut (RTL) berkelanjutan.',
+                keyPoints: [
+                    'Mengidentifikasi Barriers to Learning: Menganalisis apakah hambatan berasal dari materi, metode mengajar, sikap guru, atau lingkungan.',
+                    'Refleksi Kritis Kolaboratif: Diskusi studi kasus bersama tim kurikulum dan GPK untuk mencari solusi alternatif.',
+                    'Rencana Tindak Lanjut (RTL / Action Plan): Perumusan langkah perbaikan konkret, kebutuhan pelatihan guru, serta modifikasi sarana.'
+                ],
+                caseStudy: 'Evaluasi Hambatan Sistemik: Menganalisis penyebab belum efektifnya kerja kelompok bagi murid dengan hambatan emosional dan merancang pembagian peran yang lebih terstruktur.',
+                taskNote: '3.3.4. Aktivitas 4: Waktu untuk Belajar Mandiri, 3.3.5. Aktivitas 5: Giliran Anda, 3.3.6. Aktivitas 6: Terhubung dengan rekan, 3.3.7. Aktivitas 7: Menulis Jurnal Reflektif.',
+                taskUrl: 'https://drive.google.com/drive/folders/1FIAFxkO-1pp2_LcRTSzYr-t2YHAo4dkQ?usp=drive_link'
+            }
+        ];
+
+        /* ==========================================================================
+           2. STATE & AUDIO SYNTHESIZER (Web Audio API)
+           ========================================================================== */
+        let completedTasks = JSON.parse(localStorage.getItem('inklusif_completed_tasks')) || [];
+        let isAudioEnabled = true;
+        let activeCategory = 'all';
+        let currentSearchQuery = '';
+        let activeModalTopicId = null;
+
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSynthTone(freq = 440, type = 'sine', duration = 0.25) {
+            if (!isAudioEnabled) return;
+            try {
+                initAudio();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+                gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.log("Audio Error:", e);
+            }
+        }
+
+        function toggleAudio() {
+            isAudioEnabled = !isAudioEnabled;
+            const icon = document.getElementById('audioIcon');
+            const iconMobile = document.getElementById('audioIconMobile');
+            const text = document.getElementById('audioText');
+
+            if (isAudioEnabled) {
+                if (icon) icon.className = "fa-solid fa-volume-high text-cyan-400";
+                if (iconMobile) iconMobile.className = "fa-solid fa-volume-high text-cyan-400";
+                if (text) text.innerText = "Sound: ON";
+            } else {
+                if (icon) icon.className = "fa-solid fa-volume-xmark text-gray-500";
+                if (iconMobile) iconMobile.className = "fa-solid fa-volume-xmark text-gray-500";
+                if (text) text.innerText = "Sound: OFF";
+            }
+        }
+
+        /* ==========================================================================
+           3. RENDER TOPIC BUTTON CARDS
+           ========================================================================== */
+        function renderTopics() {
+            const grid = document.getElementById('topicsGrid');
+            const noResults = document.getElementById('noResults');
+            grid.innerHTML = '';
+
+            const filtered = topicsData.filter(topic => {
+                const matchesCategory = (activeCategory === 'all') || (topic.category === activeCategory);
+                const matchesSearch = topic.title.toLowerCase().includes(currentSearchQuery.toLowerCase()) ||
+                                      topic.themeName.toLowerCase().includes(currentSearchQuery.toLowerCase()) ||
+                                      topic.shortDesc.toLowerCase().includes(currentSearchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+            }
+
+            filtered.forEach(topic => {
+                const isCompleted = completedTasks.includes(topic.id);
+                
+                const card = document.createElement('div');
+                card.className = "topic-btn glass-card rounded-3xl p-6 flex flex-col justify-between cursor-pointer border border-white/10";
+                card.style.setProperty('--glow-gradient', topic.gradient);
+                card.style.setProperty('--shadow-color', topic.glow);
+
+                card.onclick = (e) => {
+                    if (e.target.tagName === 'INPUT' || e.target.closest('.checkbox-wrapper') || e.target.closest('.direct-task-link')) return;
+                    openTopicModal(topic.id);
+                };
+
+                card.innerHTML = `
+                    <div>
+                        <!-- Header / Category Badge -->
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-[10px] sm:text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-white/5 border border-white/10 text-cyan-300">
+                                ${topic.themeTag}
+                            </span>
+                            
+                            <!-- Task Checkbox Wrapper -->
+                            <div class="checkbox-wrapper flex items-center space-x-1.5 bg-black/30 px-2.5 py-1 rounded-full border border-white/5" onclick="event.stopPropagation()">
+                                <input type="checkbox" id="chk_${topic.id}" ${isCompleted ? 'checked' : ''} onchange="toggleTaskStatus('${topic.id}')" class="w-4 h-4 rounded border-gray-600 bg-gray-800 text-cyan-500 focus:ring-cyan-500/30 cursor-pointer">
+                                <label for="chk_${topic.id}" class="text-[10px] font-semibold ${isCompleted ? 'text-emerald-400' : 'text-gray-400'} cursor-pointer">
+                                    ${isCompleted ? 'Selesai' : 'Tugas'}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Icon & Title -->
+                        <div class="flex items-start space-x-4 my-2">
+                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-xl text-white shadow-lg shrink-0" style="background: ${topic.gradient}">
+                                <i class="fa-solid ${topic.icon}"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-base sm:text-lg text-white leading-snug hover:text-cyan-300 transition-colors">
+                                    ${topic.title}
+                                </h3>
+                            </div>
+                        </div>
+
+                        <!-- Short Description -->
+                        <p class="text-xs sm:text-sm text-gray-400 mt-3 line-clamp-2 leading-relaxed">
+                            ${topic.shortDesc}
+                        </p>
+                    </div>
+
+                    <!-- Bottom Action Bar -->
+                    <div class="mt-6 pt-4 border-t border-white/5 flex justify-between items-center text-xs">
+                        <span class="text-gray-400 group-hover:text-white transition-colors flex items-center">
+                            <i class="fa-solid fa-circle-info text-cyan-400 mr-1.5"></i> Detail
+                        </span>
+                        <div class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-cyan-400">
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </div>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+
+            updateProgressBar();
+        }
+
+        /* ==========================================================================
+           4. TASK COMPLETION TRACKER & LOCALSTORAGE
+           ========================================================================== */
+        function toggleTaskStatus(id) {
+            initAudio();
+            const index = completedTasks.indexOf(id);
+            if (index > -1) {
+                completedTasks.splice(index, 1);
+                playSynthTone(350, 'sawtooth', 0.15);
+            } else {
+                completedTasks.push(id);
+                playSynthTone(880, 'sine', 0.25);
+                triggerConfetti();
+            }
+
+            localStorage.setItem('inklusif_completed_tasks', JSON.stringify(completedTasks));
+            renderTopics();
+
+            if (activeModalTopicId === id) {
+                updateModalStatusUI(id);
+            }
+        }
+
+        function toggleTaskStatusFromModal() {
+            if (activeModalTopicId) {
+                toggleTaskStatus(activeModalTopicId);
+            }
+        }
+
+        function updateProgressBar() {
+            const total = topicsData.length;
+            const completed = completedTasks.length;
+            const percentage = Math.round((completed / total) * 100);
+
+            document.getElementById('progressText').innerText = `${completed}/${total}`;
+            document.getElementById('progressBar').style.width = `${percentage}%`;
+        }
+
+        /* ==========================================================================
+           5. MODAL POPUP LOGIC
+           ========================================================================== */
+        function openTopicModal(id) {
+            const topic = topicsData.find(t => t.id === id);
+            if (!topic) return;
+
+            activeModalTopicId = id;
+            playSynthTone(topic.soundFreq, 'triangle', 0.3);
+
+            document.getElementById('mThemeBadge').innerText = topic.themeTag;
+            document.getElementById('mTitle').innerText = topic.title;
+            document.getElementById('mSummary').innerText = topic.summary;
+            document.getElementById('mCaseStudy').innerText = topic.caseStudy || 'Belum ada contoh studi kasus spesifik.';
+            document.getElementById('mTaskNote').innerText = topic.taskNote;
+
+            // Set dynamic link for assignment box
+            const taskBox = document.getElementById('mTaskBox');
+            if (taskBox) {
+                taskBox.href = topic.taskUrl || '#';
+            }
+
+            // Key Points List
+            const keyPointsList = document.getElementById('mKeyPoints');
+            keyPointsList.innerHTML = topic.keyPoints.map(point => `
+                <li class="flex items-start space-x-2.5">
+                    <i class="fa-solid fa-circle-check text-emerald-400 mt-1 text-xs shrink-0"></i>
+                    <span>${point}</span>
+                </li>
+            `).join('');
+
+            updateModalStatusUI(id);
+
+            // Animate Modal Open
+            const modal = document.getElementById('topicModal');
+            const container = document.getElementById('modalContainer');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            container.classList.remove('scale-95');
+            container.classList.add('scale-100');
+        }
+
+        function updateModalStatusUI(id) {
+            const isCompleted = completedTasks.includes(id);
+            const statusBadge = document.getElementById('mStatusBadge');
+            const checkbox = document.getElementById('mCheckbox');
+
+            checkbox.checked = isCompleted;
+
+            if (isCompleted) {
+                statusBadge.className = "px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center space-x-1";
+                statusBadge.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>Tugas Selesai</span>`;
+            } else {
+                statusBadge.className = "px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold bg-gray-800 text-gray-400 border border-white/5 flex items-center space-x-1";
+                statusBadge.innerHTML = `<i class="fa-solid fa-clock"></i> <span>Belum Selesai</span>`;
+            }
+        }
+
+        function closeTopicModal() {
+            playSynthTone(300, 'sine', 0.15);
+            const modal = document.getElementById('topicModal');
+            const container = document.getElementById('modalContainer');
+
+            container.classList.remove('scale-100');
+            container.classList.add('scale-95');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            activeModalTopicId = null;
+        }
+
+        /* ==========================================================================
+           6. FILTER & SEARCH HANDLERS
+           ========================================================================== */
+        function filterCategory(category) {
+            initAudio();
+            playSynthTone(600, 'sine', 0.15);
+            activeCategory = category;
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'text-white');
+                btn.classList.add('text-gray-300');
+            });
+
+            const activeBtn = document.getElementById(`tab-${category}`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+
+            renderTopics();
+        }
+
+        function handleSearch() {
+            currentSearchQuery = document.getElementById('searchInput').value;
+            renderTopics();
+        }
+
+        /* ==========================================================================
+           7. VISUAL EFFECTS (CONFETTI)
+           ========================================================================== */
+        function triggerConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 80,
+                    spread: 60,
+                    origin: { y: 0.7 },
+                    colors: ['#a855f7', '#06b6d4', '#10b981', '#f59e0b', '#ec4899']
+                });
+            }
+        }
+
+        // Initialize App on DOM Load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderTopics();
+        });
+    </script>
+</body>
+</html>
